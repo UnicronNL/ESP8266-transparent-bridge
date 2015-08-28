@@ -12,21 +12,21 @@ BUILD_BASE	= build
 FW_BASE		= firmware
 
 # Base directory for the compiler
-XTENSA_TOOLS_ROOT ?= /opt/Espressif/crosstool-NG/builds/xtensa-lx106-elf/bin
+XTENSA_TOOLS_ROOT ?= /home/kim/Apps/esp-open-sdk/xtensa-lx106-elf/bin
 
 # base directory of the ESP8266 SDK package, absolute
-SDK_BASE	?= /opt/Espressif/ESP8266_SDK
+SDK_BASE	?= /home/kim/Apps/esp-open-sdk/sdk
 
 #Esptool.py path and port
 ESPTOOL		?= esptool.py
-ESPPORT		?= /dev/ttyUSB0
+ESPPORT		?= /dev/ttyACM0
 
 # name for the target project
 TARGET		= app
 
 # which modules (subdirectories) of the project to include in compiling
 MODULES		= driver user
-EXTRA_INCDIR    = include /opt/Espressif/include
+EXTRA_INCDIR    = include /home/kim/Apps/esp-open-sdk/sdk/include
 
 # libraries used in this project, mainly provided by the SDK
 LIBS		= c gcc hal pp phy net80211 lwip wpa main
@@ -62,7 +62,7 @@ LD		:= $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-gcc
 ####
 #### no user configurable options below here
 ####
-FW_TOOL		?= /usr/bin/esptool
+FW_TOOL		?= /home/kim/src/esptool-ck/esptool
 SRC_DIR		:= $(MODULES)
 BUILD_DIR	:= $(addprefix $(BUILD_BASE)/,$(MODULES))
 

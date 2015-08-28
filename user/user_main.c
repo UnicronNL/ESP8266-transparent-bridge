@@ -66,20 +66,10 @@ void user_init(void)
 	uint8_t i;
 	//wifi_set_opmode(3); //STA+AP
 
-	#ifdef CONFIG_DYNAMIC
-		flash_param_t *flash_param;
-		flash_param_init();
-		flash_param = flash_param_get();
-		UartDev.data_bits = GETUART_DATABITS(flash_param->uartconf0);
-		UartDev.parity = GETUART_PARITYMODE(flash_param->uartconf0);
-		UartDev.stop_bits = GETUART_STOPBITS(flash_param->uartconf0);
-		uart_init(flash_param->baud, BIT_RATE_115200);
-	#else
-		UartDev.data_bits = EIGHT_BITS;
-		UartDev.parity = NONE_BITS;
-		UartDev.stop_bits = ONE_STOP_BIT;
-		uart_init(BIT_RATE_115200, BIT_RATE_115200);
-	#endif
+	UartDev.data_bits = EIGHT_BITS;
+	UartDev.parity = NONE_BITS;
+	UartDev.stop_bits = ONE_STOP_BIT;
+	uart_init(BIT_RATE_500000, BIT_RATE_500000);
 	os_printf("size flash_param_t %d\n", sizeof(flash_param_t));
 
 
@@ -91,7 +81,7 @@ void user_init(void)
 	#ifdef CONFIG_DYNAMIC
 		serverInit(flash_param->port);
 	#else
-		serverInit(23);
+		serverInit(8876);
 	#endif
 
 	#ifdef CONFIG_GPIO

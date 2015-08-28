@@ -33,16 +33,6 @@ struct station_config {
 	uint8_t bssid[6];
 };
 
-struct softap_config {
-	uint8_t ssid[32];
-	uint8_t password[64];
-	uint8_t ssid_len;
-	uint8_t channel;
-	uint8_t authmode;
-	uint8_t ssid_hidden;
-	uint8_t max_connection;
-};
-
 #define os_sprintf	sprintf
 #define os_malloc	malloc
 #define os_strncpy	strncpy
@@ -89,44 +79,19 @@ void config_gpio(void) {
 #ifdef CONFIG_STATIC
 
 void config_execute(void) {
-	uint8_t mode;
 	struct station_config sta_conf;
-	struct softap_config ap_conf;
-	uint8_t macaddr[6] = { 0, 0, 0, 0, 0, 0 };
-
-	// make sure the device is in AP and STA combined mode
-	mode = wifi_get_opmode();
-	if (mode != STATIONAP_MODE) {
-		wifi_set_opmode(STATIONAP_MODE);
-		os_delay_us(10000);
-		system_restart();
-	}
 
 	// connect to our station
+	wifi_set_opmode_current(STATION_MODE);
 	os_bzero(&sta_conf, sizeof(struct station_config));
 	wifi_station_get_config(&sta_conf);
-	os_strncpy(sta_conf.ssid, STA_SSID, sizeof(sta_conf.ssid));
-	os_strncpy(sta_conf.password, STA_PASSWORD, sizeof(sta_conf.password));
+	strncpy(sta_conf.ssid, SSID, sizeof(sta_conf.ssid));
+	strncpy(sta_conf.password, PASSWORD, sizeof(sta_conf.password));
 	wifi_station_disconnect();
 	ETS_UART_INTR_DISABLE();
 	wifi_station_set_config(&sta_conf);
 	ETS_UART_INTR_ENABLE();
 	wifi_station_connect();
-
-	// setup the soft AP
-	os_bzero(&ap_conf, sizeof(struct softap_config));
-	wifi_softap_get_config(&ap_conf);
-	wifi_get_macaddr(SOFTAP_IF, macaddr);
-	os_strncpy(ap_conf.ssid, AP_SSID, sizeof(ap_conf.ssid));
-	ap_conf.ssid_len = strlen(AP_SSID);
-	os_strncpy(ap_conf.password, AP_PASSWORD, sizeof(ap_conf.password));
-	//os_snprintf(&ap_conf.password[strlen(AP_PASSWORD)], sizeof(ap_conf.password) - strlen(AP_PASSWORD), "_%02X%02X%02X", macaddr[3], macaddr[4], macaddr[5]);
-	os_sprintf(ap_conf.password[strlen(AP_PASSWORD)], "_%02X%02X%02X", macaddr[3], macaddr[4], macaddr[5]);
-	ap_conf.authmode = AUTH_WPA_PSK;
-	ap_conf.channel = 6;
-	ETS_UART_INTR_DISABLE();
-	wifi_softap_set_config(&ap_conf);
-	ETS_UART_INTR_ENABLE();
 }
 
 #endif

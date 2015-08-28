@@ -45,8 +45,8 @@ void ICACHE_FLASH_ATTR flash_param_init_defaults(void) {
 	flash_param_t *flash_param = flash_param_get();
 	flash_param->magic = FLASH_PARAM_MAGIC;
 	flash_param->version = FLASH_PARAM_VERSION;
-	flash_param->baud = 115200;
-	flash_param->port = 23;
+	flash_param->baud = 250000;
+	flash_param->port = 8876;
 	flash_param->uartconf0 = CALC_UARTMODE(EIGHT_BITS, NONE_BITS, ONE_STOP_BIT);
 	flash_param_set();
 }
