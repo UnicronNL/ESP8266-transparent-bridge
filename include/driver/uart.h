@@ -130,7 +130,7 @@ typedef struct {
     UartBautRate 	     baut_rate;
     UartBitsNum4Char  data_bits;
     UartExistParity      exist_parity;
-    UartParityMode 	    parity;    
+    UartParityMode 	    parity;
     UartStopBitsNum   stop_bits;
     UartFlowCtrl         flow_ctrl;
     RcvMsgBuff          rcv_buff;
@@ -144,4 +144,3 @@ void uart_init(UartBautRate uart0_br, UartBautRate uart1_br);
 void uart0_sendStr(const char *str);
 
 #endif
-

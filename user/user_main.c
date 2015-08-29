@@ -33,7 +33,7 @@ static uint8 uartbuffer[MAX_UARTBUFFER];
 
 static void ICACHE_FLASH_ATTR recvTask(os_event_t *events)
 {
-	uint8_t i;	 
+	uint8_t i;
 	while (READ_PERI_REG(UART_STATUS(UART0)) & (UART_RXFIFO_CNT << UART_RXFIFO_CNT_S))
 	{
 		WRITE_PERI_REG(0X60000914, 0x73); //WTD
@@ -42,7 +42,7 @@ static void ICACHE_FLASH_ATTR recvTask(os_event_t *events)
 			uartbuffer[length++] = READ_PERI_REG(UART_FIFO(UART0)) & 0xFF;
 		for (i = 0; i < MAX_CONN; ++i)
 			if (connData[i].conn) 
-				espbuffsent(&connData[i], uartbuffer, length);		
+				espbuffsent(&connData[i], uartbuffer, length);
 	}
 
 	if(UART_RXFIFO_FULL_INT_ST == (READ_PERI_REG(UART_INT_ST(UART0)) & UART_RXFIFO_FULL_INT_ST))

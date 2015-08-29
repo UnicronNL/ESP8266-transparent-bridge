@@ -20,7 +20,7 @@ serverConnData connData[MAX_CONN];
 static serverConnData ICACHE_FLASH_ATTR *serverFindConnData(void *arg) {
 	int i;
 	for (i=0; i<MAX_CONN; i++) {
-		if (connData[i].conn==(struct espconn *)arg) 
+		if (connData[i].conn==(struct espconn *)arg)
 			return &connData[i];
 	}
 	//os_printf("FindConnData: Huh? Couldn't find connection for %p\n", arg);
@@ -36,7 +36,7 @@ static sint8  ICACHE_FLASH_ATTR sendtxbuffer(serverConnData *conn) {
 	if (conn->txbufferlen != 0)	{
 		conn->readytosend = false;
 		result= espconn_sent(conn->conn, (uint8_t*)conn->txbuffer, conn->txbufferlen);
-		conn->txbufferlen = 0;	
+		conn->txbufferlen = 0;
 		if (result != ESPCONN_OK)
 			os_printf("sendtxbuffer: espconn_sent error %d on conn %p\n", result, conn);
 	}
@@ -77,7 +77,7 @@ sint8 ICACHE_FLASH_ATTR espbuffsent(serverConnData *conn, const char *data, uint
 	}
 	os_memcpy(conn->txbuffer + conn->txbufferlen, data, len);
 	conn->txbufferlen += len;
-	if (conn->readytosend) 
+	if (conn->readytosend)
 		return sendtxbuffer(conn);
 	return ESPCONN_OK;
 }
