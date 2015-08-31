@@ -60,11 +60,33 @@ static void ICACHE_FLASH_ATTR recvTask(os_event_t *events)
 // UartDev is defined and initialized in rom code.
 extern UartDevice    UartDev;
 
+#define FUNC_U0CTS    4
+#define FUNC_U0RTS    4
+
+static volatile os_timer_t some_timer;
+
+void some_timer_func(void *arg) // in Arduino this is loop the main loop
+{
+        PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTCK_U, FUNC_U0CTS);//CONFIG MTCK PIN FUNC TO U0CTS
+        PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDO_U, FUNC_U0RTS);//CONFIG MTDO PIN FUNC TO U0RTS
+        SET_PERI_REG_MASK(0x3ff00028 , BIT2);//SWAP PIN : U0TXD<==>U0RTS(MTDO) , U0RXD<==>U0CTS(MTCK)
+	os_printf("pins activated");
+}
+
 void user_init(void)
 {
+        uint8_t i;
+        //system_set_os_print(0);
+	os_timer_disarm(&some_timer);
 
-	uint8_t i;
-	//wifi_set_opmode(3); //STA+AP
+	//Setup timer
+	os_timer_setfn(&some_timer, (os_timer_func_t *)some_timer_func, NULL);
+
+	//Arm the timer
+	//&some_timer is the pointer
+	//1000 is the fire time in ms
+	//0 for once and 1 for repeating
+	os_timer_arm(&some_timer, 5000, 0);
 
 	UartDev.data_bits = EIGHT_BITS;
 	UartDev.parity = NONE_BITS;
